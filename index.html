@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lucky Wings</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: url('https://i.imgur.com/BRl6wyx.png') no-repeat center center fixed;
+      background-size: cover;
+      font-family: Arial, sans-serif;
+      color: #fff;
+      min-height: 100vh;
+    }
+    .centered-landing {
+      position: fixed;
+      z-index: 10;
+      top: 0; left: 0; right: 0; bottom: 0;
+      width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.65);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s;
+    }
+    .centered-landing.hide {
+      opacity: 0;
+      pointer-events: none;
+    }
+    .landing-title {
+      font-size: 2.5em;
+      color: #ffe066;
+      font-weight: bold;
+      margin-bottom: 22px;
+      text-shadow: 2px 4px 10px #000;
+      text-align: center;
+      letter-spacing: 2px;
+    }
+    .landing-tagline {
+      font-size: 1.33em;
+      font-weight: 500;
+      color: #fff;
+      margin-bottom: 32px;
+      text-shadow: 1px 2px 8px #000;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+    .landing-logo {
+      max-width: 340px;
+      width: 90vw;
+      margin-bottom: 36px;
+      filter: drop-shadow(0 8px 32px #000);
+      border-radius: 24px;
+    }
+    .enter-btn {
+      font-size: 1.4em;
+      padding: 20px 60px;
+      background: #ffcc00;
+      color: #222;
+      border: none;
+      border-radius: 13px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, transform 0.18s;
+      box-shadow: 0 6px 30px rgba(0,0,0,0.16);
+      letter-spacing: 2px;
+    }
+    .enter-btn:hover {
+      background: #ffe066;
+      color: #111;
+      transform: scale(1.04);
+    }
+    .container {
+      max-width: 1050px;
+      margin: 32px auto;
+      padding: 40px 20px 310px 20px;
+      background: rgba(0,0,0,0.6);
+      border-radius: 18px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+      display: none;
+      animation: fadeIn 0.6s forwards;
+      position: relative;
+      min-height: 80vh;
+      box-sizing: border-box;
+    }
+    .container.show {
+      display: block;
+    }
+    .logo {
+      display: block;
+      margin: 0 auto 18px auto;
+      max-width: 320px;
+      width: 90%;
+      border-radius: 24px;
+    }
+    .main-title {
+      text-align: center;
+      margin-bottom: 8px;
+      font-size: 2.5em;
+      letter-spacing: 2px;
+      color: #ffe066;
+      font-weight: bold;
+      text-shadow: 2px 4px 10px #000;
+    }
+    .cta-message {
+      text-align: center;
+      font-size: 1.25em;
+      font-weight: bold;
+      color: #fffde4;
+      margin-bottom: 28px;
+      margin-top: 0;
+      text-shadow: 1px 2px 8px #000;
+      letter-spacing: 1px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 28px;
+      font-size: 2em;
+      letter-spacing: 1px;
+      color: #fff;
+      text-shadow: 1px 2px 7px #000;
+    }
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      margin-top: 20px;
+      margin-bottom: 60px;
+    }
+    .game-card {
+      background: rgba(255,255,255,0.09);
+      border-radius: 14px;
+      padding: 18px 10px 12px 10px;
+      text-align: center;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.2);
+      transition: transform 0.23s, box-shadow 0.23s;
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+    }
+    .game-card:hover {
+      transform: translateY(-7px) scale(1.04);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.28);
+      background: rgba(255,255,255,0.16);
+      color: #ffe066;
+    }
+    .game-card img {
+      max-width: 110px;
+      max-height: 110px;
+      display: block;
+      margin: 0 auto 12px auto;
+      border-radius: 8px;
+      background: #fff2;
+      padding: 6px;
+      transition: filter 0.2s;
+    }
+    .game-card:hover img {
+      filter: brightness(1.15) drop-shadow(0 0 8px #ffcc00bb);
+    }
+    .game-label {
+      font-size: 1.13em;
+      font-weight: bold;
+      letter-spacing: 1px;
+      color: #ffe58f;
+      text-shadow: 1px 2px 6px #000;
+    }
+    .footer-bar {
+      width: 100%;
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.90);
+      padding: 22px 0 14px 0;
+      z-index: 99;
+      box-sizing: border-box;
+      border-radius: 0 0 18px 18px;
+      box-shadow: 0 -4px 32px rgba(0,0,0,0.22);
+    }
+    .footer-buttons-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 48px;
+      flex-wrap: wrap;
+      margin-bottom: 0;
+    }
+    .footer-btn-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 200px;
+      max-width: 325px;
+      flex: 1 1 240px;
+      margin-bottom: 0;
+    }
+    .footer-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #2466c1;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      padding: 13px 32px 13px 24px;
+      border-radius: 25px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+      font-size: 1.15em;
+      letter-spacing: 1px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s, transform 0.2s;
+      width: 100%;
+      max-width: 325px;
+      margin-bottom: 0;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+    .footer-btn.playwin {
+      background: #ffcc00;
+      color: #1a1a1a;
+    }
+    .footer-btn.playwin:hover {
+      background: #ffe066;
+      color: #1a1a1a;
+    }
+    .footer-btn img {
+      width: 26px;
+      height: 26px;
+      display: inline-block;
+      vertical-align: middle;
+      background: none !important;
+      box-shadow: none !important;
+      border-radius: 6px;
+      opacity: 1 !important;
+      filter: none !important;
+    }
+    .footer-text {
+      color: #ffe066;
+      font-size: 1em;
+      font-weight: 500;
+      text-align: center;
+      text-shadow: 1px 2px 8px #000;
+      margin-top: 10px;
+      margin-bottom: 0;
+      padding: 0 6px;
+      word-break: break-word;
+      min-height: 1.5em;
+    }
+    .footer-btn-col .footer-text.gamerules-desc {
+      color: #ffe066;
+      font-size: 1em;
+      font-weight: 500;
+    }
+    #gameRulesModal {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      left: 0;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.7);
+      align-items: center;
+      justify-content: center;
+    }
+    #gameRulesModal .modal-inner {
+      position: relative;
+      max-width: 90vw;
+      max-height: 90vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    #gameRulesModal img {
+      display: block;
+      max-width: 95vw;
+      max-height: 80vh;
+      border-radius: 14px;
+      box-shadow: 0 4px 20px #000;
+    }
+    #closeRulesBtn {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      font-size: 2em;
+      background: rgba(0,0,0,0.8);
+      color: #ffe066;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      line-height: 1;
+      z-index: 2;
+      transition: background 0.2s;
+    }
+    #closeRulesBtn:hover {
+      background: rgba(255,204,0,0.95);
+      color: #222;
+    }
+    @media (max-width: 900px) {
+      .games-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .footer-btn-row, .footer-btn-col, .footer-btn, .footer-text { min-width: 120px; font-size: 1em; }
+      .footer-buttons-row { gap: 20px; }
+    }
+    @media (max-width: 600px) {
+      .container { padding-bottom: 310px; }
+      .games-grid { grid-template-columns: 1fr; gap: 14px; margin-bottom: 80px; }
+      .logo { max-width: 85vw; }
+      .footer-bar { padding: 18px 0 6px 0; }
+      .footer-buttons-row { flex-direction: column; gap: 20px; }
+      .footer-btn-col { min-width: 0; max-width: 98vw; width: 100%; }
+      .footer-btn { font-size: 1em; min-width: 0; max-width: 98vw; }
+      .footer-text { font-size: 0.98em; }
+      #gameRulesModal img { max-width: 98vw; max-height: 70vh; }
+      #closeRulesBtn { top: 4vw; left: 4vw; }
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: scale(0.98);}
+      100% { opacity: 1; transform: scale(1);}
+    }
+  </style>
+</head>
+<body>
+  <!-- Landing Screen -->
+  <div class="centered-landing" id="landing">
+    <div class="landing-title">Welcome to Lucky Wings</div>
+    <div class="landing-tagline">Step in for your chance to <span style="color:#ffcc00; font-weight:bold;">WIN BIG!</span></div>
+    <img src="https://i.imgur.com/oA3hprS.jpeg" alt="Logo" class="landing-logo" />
+    <button class="enter-btn" id="enterBtn">ENTER</button>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container" id="mainContent">
+    <div class="main-title">Lucky Wings</div>
+    <img src="https://i.imgur.com/oA3hprS.jpeg" alt="Logo" class="logo" />
+    <div class="cta-message">
+      Spin, win, and feel the excitement — your jackpot awaits!
+    </div>
+    <h1>Game Gallery</h1>
+    <div class="games-grid">
+      <a class="game-card" href="https://www.cashmachine777.com/" target="_blank" title="Play Cash Machine">
+        <img src="https://i.imgur.com/QVo4Iwo.png" alt="Cash Machine"/>
+        <div class="game-label">Cash Machine</div>
+      </a>
+      <a class="game-card" href="https://www.gameroom777.com/" target="_blank" title="Play Game Room">
+        <img src="https://i.imgur.com/wkWz5Pb.png" alt="Game Room"/>
+        <div class="game-label">Game Room</div>
+      </a>
+      <a class="game-card" href="https://download.gamevault999.com/" target="_blank" title="Play Game Vault">
+        <img src="https://i.imgur.com/9HciD0V.png" alt="Game Vault"/>
+        <div class="game-label">Game Vault</div>
+      </a>
+      <a class="game-card" href="https://dl.juwa777.com/" target="_blank" title="Play Juwa">
+        <img src="https://i.imgur.com/yqVJcc2.png" alt="Juwa"/>
+        <div class="game-label">Juwa</div>
+      </a>
+      <a class="game-card" href="https://milkywayapp.xyz/" target="_blank" title="Play Milkyway">
+        <img src="https://i.imgur.com/Hz6o6P1.png" alt="Milkyway"/>
+        <div class="game-label">Milkyway</div>
+      </a>
+      <a class="game-card" href="http://start.orionstars.vip:8580/index.html" target="_blank" title="Play Orion Star">
+        <img src="https://i.imgur.com/aCOkxwM.png" alt="Orion Star"/>
+        <div class="game-label">Orion Star</div>
+      </a>
+      <a class="game-card" href="https://m.lasvegassweeps.com/" target="_blank" title="Play Vegas Sweeps">
+        <img src="https://i.imgur.com/kpTnfDU.png" alt="Vegas Sweeps"/>
+        <div class="game-label">Vegas Sweeps</div>
+      </a>
+    </div>
+    <!-- Footer Bar for Buttons -->
+    <div class="footer-bar">
+      <div class="footer-buttons-row">
+        <div class="footer-btn-col">
+          <a class="footer-btn playwin" href="https://www.facebook.com/share/14JzzuoTWrq/?mibextid=wwXIfr" target="_blank" title="Play & Win - Message us!">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook" />
+            Play & Win
+          </a>
+          <div class="footer-text">To play and win games, message us here!</div>
+        </div>
+        <div class="footer-btn-col">
+          <button class="footer-btn" type="button" title="Contact">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook" />
+            Contact
+          </button>
+          <div class="footer-text">For support or questions, click the button above.</div>
+        </div>
+        <div class="footer-btn-col">
+          <button class="footer-btn" id="showRulesBtn" type="button">
+            <img src="https://i.imgur.com/8TjkQzg.png" alt="Game Rules" />
+            Game Rules
+          </button>
+          <div class="footer-text gamerules-desc">View how to play and win big!</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal popup for Game Rules image (OUTSIDE .container) -->
+  <div id="gameRulesModal">
+    <div class="modal-inner">
+      <button id="closeRulesBtn" title="Close">&times;</button>
+      <img src="https://i.imgur.com/jccfwkM.png" alt="Game Rules" />
+    </div>
+  </div>
+  <script>
+    // Handles transition from landing to main content
+    document.getElementById('enterBtn').addEventListener('click', function() {
+      document.getElementById('landing').classList.add('hide');
+      setTimeout(function() {
+        document.getElementById('landing').style.display = 'none';
+        document.getElementById('mainContent').classList.add('show');
+      }, 500); // match CSS transition
+    });
+    // Game Rules popup logic
+    document.getElementById('showRulesBtn').onclick = function() {
+      document.getElementById('gameRulesModal').style.display = 'flex';
+    };
+    document.getElementById('closeRulesBtn').onclick = function() {
+      document.getElementById('gameRulesModal').style.display = 'none';
+    };
+    // Optional: close modal if clicking outside the image
+    document.getElementById('gameRulesModal').onclick = function(e) {
+      if (e.target === this) this.style.display = 'none';
+    };
+  </script>
+</body>
+</html>
